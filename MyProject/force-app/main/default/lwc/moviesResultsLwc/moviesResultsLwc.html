@@ -1,0 +1,53 @@
+ <template>
+    <lightning-card title="List of movies" icon-name="custom:custom9">
+	    <div class="slds-clearfix">
+			<lightning-button label="New Movie" class="slds-float_right"></lightning-button>
+		</div>
+		<div class="slds-grid slds-wrap" >  
+			<template if:true={movies.data}>
+				
+			   <template for:each={movies.data} for:item="m">
+					<div class="slds-col slds-size_4-of-12" key={m.Id}> 
+
+						<c-movie-tile
+							key={m.Id}
+							movie={m}
+							class="slds-var-m-around_x-small">
+						</c-movie-tile>
+	    			</div>
+				</template>
+			</template>
+
+
+   
+		</div>
+<!-- <aside class="sidebar-second"     onmovieselect={handleMovieSelect}>
+	<template if:true={selectedMovie}>
+		<c-movie-preview-lwc
+					movie={selectedMovie}
+					class="slds-var-m-around_x-small">
+				</c-movie-preview-lwc>
+	</template>
+</aside> -->
+</lightning-card> 
+
+
+</template>  
+<!-- <template>
+    <lightning-card title="Related Contacts" icon-name="standard:contact">
+        <div class="slds-m-around_medium">
+            
+            <template if:true={isError}>
+                <div>{errorMessage}</div>
+            </template>
+
+            <lightning-datatable
+                key-field="Id"
+                data={data}
+                columns={columns}
+                hide-checkbox-column>
+            </lightning-datatable>
+
+        </div>
+    </lightning-card>
+</template> -->

@@ -1,0 +1,16 @@
+<template>
+	<lightning-card title="Movies" >
+		<div class="slds-card__body_inner">
+			<!-- Start bear list -->
+			<c-movies-results-lwc >
+            </c-movies-results-lwc>
+			<!-- End bear list -->
+			<!-- Data failed to load -->
+			<template if:true={error}>
+				<div class="slds-text-color_error">
+					An error occurred while loading the bear list
+				</div>
+			</template>
+		</div>
+	</lightning-card>
+</template>

@@ -1,0 +1,29 @@
+<template>
+    <!-- <lightning-card title="LdsCreateRecord" icon-name="standard:record">
+        <lightning-input label="Name"
+        onchange={nameChangedHandler}></lightning-input>
+        <lightning-combobox  label="Category" value={CategoryValue}
+        options={options}
+         onchange={categoryhandleChange}>
+
+    </lightning-combobox>
+        <lightning-input type="date" label="Date"
+        onchange={releaseDateChangedHandler}></lightning-input>
+        <lightning-input label="Description"
+        onchange={descriptionChangedHandler}></lightning-input>
+        <lightning-button 
+           label="Create Movie"
+            variant="brand"
+            onclick={createMovie}>
+        </lightning-button>
+  </lightning-card> -->
+<lightning-card title="Create New Movie" >
+        <p class="slds-p-horizontal_small"></p>
+        <lightning-record-form   object-api-name={objectApiName} fields={fieldList} onsuccess={handleMovieCreate}>   
+        </lightning-record-form>
+        </p>
+
+</lightning-card> 
+
+
+</template>
