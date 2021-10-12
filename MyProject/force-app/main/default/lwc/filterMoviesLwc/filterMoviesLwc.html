@@ -1,25 +1,51 @@
 <template>
-    <lightning-input type="search"
-	onchange={handleSearchTermChange}
-	variant="label-hidden"
-	class="slds-var-m-bottom_small"
-	label="Search"
-	placeholder="Search for movies"
-	value={searchTerm}>
-</lightning-input>
-<template if:false={hasResults}>
-	<div class="slds-align_absolute-center slds-var-m-vertical_small">
-		This is beary disturbing, we did not find results...
-	</div>
-</template> 
-    <!-- <lightning-card title={componentLabel} icon-name="standard:filter">
-        <div class="slds-m-around_medium">
-            <p>Value being typed : {filterValue}</p>
-            <lightning-input type="text" label="Filter By Name" onchange={handleChange}></lightning-input>
-            <br></br>
+    <lightning-card title={componentLabel} icon-name="standard:filter">
+        <!-- lightning button for open modal window -->
 
-            <lightning-button variant="brand" label="Filter" title="Filter by Name" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
-            
+    <lightning-button variant="brand"
+       label="new movie"
+       title="new movie"
+       onclick={openModal}
+       class="slds-m-left_x-small">
+    </lightning-button>
+ <!--Use template if:true to display/hide popup based on isModalOpen value--> 
+ <template if:true={isModalOpen}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create a new movie</h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <lightning-card>
+                <lightning-record-form 
+                object-api-name={objectApiName}
+                fields={fields}
+                onsuccess={handleSuccess}>
+                </lightning-record-form> 
+            </lightning-card>
+            <!-- Modal/Popup Box LWC body ENDs here -->       
         </div>
-    </lightning-card> -->
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+<div class="slds-m-around_medium">
+    <lightning-input   placeholder="Search ..." type="text"  ></lightning-input>
+    <br></br>
+
+    <lightning-button variant="brand" label="Filter" title="Filter by Name" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+    
+</div>
+
+</lightning-card>
+
 </template>

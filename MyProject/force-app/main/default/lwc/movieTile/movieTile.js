@@ -3,14 +3,14 @@ import { LightningElement, api } from 'lwc';
 export default class ContactListItem extends LightningElement {
     @api movie;
 
-    selectHandler(event) {
-        // Prevents the anchor element from navigating to a URL.
+    handleSelect(event) {
+        // 1. Prevent default behavior of anchor tag click which is to navigate to the href url
         event.preventDefault();
-
-        // Creates the event with the contact ID data.
-        const selectedEvent = new CustomEvent('selected', { detail: this.movie.Id });
-
-        // Dispatches the event.
-        this.dispatchEvent(selectedEvent);
+        // 2. Create a custom event that bubbles. Read about event best practices at http://developer.salesforce.com/docs/component-library/documentation/lwc/lwc.events_best_practices
+        const selectEvent = new CustomEvent('movieselect', {
+            bubbles: true
+        });
+        // 3. Fire the custom event
+        this.dispatchEvent(selectEvent);
     }
 }

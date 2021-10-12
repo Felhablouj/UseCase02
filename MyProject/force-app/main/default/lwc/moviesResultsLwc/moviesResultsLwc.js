@@ -1,61 +1,75 @@
 // eventWithData.js
-import { LightningElement, wire,track,api} from 'lwc';
+import { LightningElement, wire,api,track} from 'lwc';
 import getNameMovie from '@salesforce/apex/MovieController.getNameMovie';
+import getMoviesByFilter from '@salesforce/apex/MovieController.getMoviesByFilter';
 
-// Import message service features required for publishing and the message channel
-import { publish, MessageContext } from 'lightning/messageService';
-import MOVIE_SELECTED_CHANNEL from '@salesforce/messageChannel/Movie_Selected__c';
-// const COLUMNS = [
-//     { label: 'Name', fieldName: 'Name__c' },
-//     { label: 'Category', fieldName: 'Category__c' }
-// ];
 
+// Import message service features required for publishing  , subscrinbing and the message channel
+import {subscribe,unsubscribe,publish, MessageContext } from 'lightning/messageService';
+import filterMoviesMC from '@salesforce/messageChannel/FilterMoviesMessageChannel__c';
+import movieSelected from '@salesforce/messageChannel/MovieChannel__c';
+
+const COLUMNS = [
+    { label: 'Name', fieldName: 'Name__c' },
+    { label: 'Category', fieldName: 'Category__c'}
+];
 export default class MoviesResultsLWC extends LightningElement {
-    // @api recordId;
-    // @track columns = COLUMNS;
-    // @track data;
+
+    @wire(MessageContext)
+    messageContext;
+
+    // Respond to UI event by publishing message
+    handleMovieSelect(event) {   
+        console.log("---publishing In Progress----- "); 
+        const payload = { recordId: event.target.movie.Id };
+        console.log("value of payload");
+        console.log(payload);
+        publish(this.messageContext, movieSelected, payload);      
+    }
     
-    // @track isError=false;
-    // @track errorMessage;
+    subscription = null;
+    @track columns = COLUMNS;
+    @track movies;
 
-    // //Lifecycle hook which fires when a component is inserted into the DOM
-    // connectedCallback(){
-    //     this.loadRelatedContacts();
-    // }
+    //Lifecycle hook which fires when a component is inserted into the DOM
+    connectedCallback(){
+        //subscribing to the Lightning Message Service Channel
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                filterMoviesMC,
+                (message) => this.handleFilterKeySubmit(message)
+            );
+        }
+        this.loadRelatedContacts("");
+    }
     
-    // loadRelatedContacts(){
-    //     //Returns a promise
-    //     getNameMovie({movieId : this.recordId})
-    //     .then(results=>{
-    //         this.data=results;
-    //         this.isError=false;
-    //     })
-    //     .catch(error=>{
-    //         this.isError=true;
-    //         this.errorMessage=error.body.message;    
-    //     });
-    // }
-
-
-
-    selectedMovie;
-
-	@wire(getNameMovie) movies;
-
-    @wire(MessageContext) messageContext;
-
-
-    movieSelected(event) {
-        const movieId = event.detail;
-        this.selectedMovie = this.movies.data.find(movie => movie.Id === movieId);
+    //Lifecycle hook which fires when a component is removed from the DOM
+    disconnectedCallback() {
+        unsubscribe(this.subscription);
+        this.subscription = null;
     }
 
+    loadRelatedContacts(filterKey){
+        getMoviesByFilter({ key : filterKey})
+        .then(results=>{
+            this.movies=results;console.log('dans loadRelatedContacts');
+        })
+        .catch(error=>{
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: error.body.message,
+                    variant: 'error'
+                })
+            );
+        });
+    }
 
-        // Respond to UI event by publishing message
-        handleMovieSelect(event) {
-            const payload = { recordId: event.target.movie.Id };
-    
-            publish(this.messageContext, MOVIE_SELECTED_CHANNEL, payload);
-        }
+    handleFilterKeySubmit(message){
+        const filterKey = message.filterKey;
+        this.loadRelatedContacts(filterKey);
+    }
+
    
 }
