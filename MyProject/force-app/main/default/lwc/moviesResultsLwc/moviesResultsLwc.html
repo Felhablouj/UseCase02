@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="List of movies" icon-name="custom:custom9"> 
+			<div class="slds-grid slds-wrap"  onmovieselect={handleMovieSelect}>  
+			<template if:true={movies}>				
+			    <template for:each={movies} for:item="movie">
+					<div class="slds-col slds-size_4-of-12" key={movie.Id} > 
+						<c-movie-tile
+							key={movie.Id}
+							movie={movie}
+						>
+						</c-movie-tile>
+	    			</div>
+				</template>
+			</template>  
+		</div>  
+	</lightning-card>
+</template>   
+
+
+
+
+
+
+
